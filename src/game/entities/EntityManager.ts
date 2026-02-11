@@ -24,7 +24,9 @@ export class EntityManager {
       randomRange(200, CONFIG.WORLD.WIDTH - 200),
       randomRange(200, CONFIG.WORLD.HEIGHT - 200)
     );
-    this.player = new Player(pos, name, randomColor());
+    // 무조건 '제이미'로 설정 요청에 따름 (혹은 입력받은 이름이 없으면 '제이미')
+    const finalName = name && name !== "Player" ? name : "제이미";
+    this.player = new Player(pos, finalName, randomColor());
     return this.player;
   }
 
@@ -34,7 +36,8 @@ export class EntityManager {
         randomRange(200, CONFIG.WORLD.WIDTH - 200),
         randomRange(200, CONFIG.WORLD.HEIGHT - 200)
       );
-      const name = CONFIG.BOT.NAMES[i % CONFIG.BOT.NAMES.length];
+      // 코잉이1, 코잉이2, ... 형식으로 이름 지정
+      const name = `${CONFIG.BOT.NAME_PREFIX}${i + 1}`;
       const bot = new Bot(pos, name, randomColor());
       this.bots.push(bot);
     }

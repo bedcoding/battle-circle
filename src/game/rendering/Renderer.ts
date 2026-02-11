@@ -317,6 +317,9 @@ export class Renderer {
     } else {
       this.drawCircleBody(ctx, screen.x, screen.y, r, entity, isPlayer);
     }
+
+    // 공통 정보 (버프, 장비, 이름, HP 등) 그리기
+    this.drawEntityInfo(ctx, screen.x, screen.y, r, entity, isPlayer);
   }
 
   private drawCircleBody(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, entity: Entity, isPlayer: boolean): void {
@@ -331,6 +334,9 @@ export class Renderer {
     ctx.lineWidth = isPlayer ? 3 : 1.5;
     ctx.stroke();
 
+  }
+
+  private drawEntityInfo(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, entity: Entity, isPlayer: boolean): void {
     // 실드 버프 이펙트
     if (entity.hasBuff(BuffType.SHIELD)) {
       ctx.strokeStyle = "rgba(124, 77, 255, 0.6)";
@@ -446,24 +452,35 @@ export class Renderer {
       this.sprites.drawTinted(ctx, "crown", x, y - r - 12, Math.max(r * 0.5, 14), "#ffd700");
     }
 
-    // 이름
-    if (r > 15) {
-      ctx.fillStyle = "white";
-      ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
-      ctx.lineWidth = 3;
-      const fontSize = Math.max(12, Math.min(r * 0.5, 24));
-      ctx.font = `bold ${fontSize}px sans-serif`;
+    // 이름 및 HP 표시
+    if (r > 5) {
       ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.strokeText(entity.name, x, y);
-      ctx.fillText(entity.name, x, y);
+      ctx.textBaseline = "top";
 
-      // 질량 표시
-      const massText = Math.floor(entity.mass).toString();
-      const smallFont = fontSize * 0.6;
-      ctx.font = `${smallFont}px sans-serif`;
-      ctx.strokeText(massText, x, y + fontSize * 0.7);
-      ctx.fillText(massText, x, y + fontSize * 0.7);
+      const fontSize = Math.max(10, Math.min(r * 0.6, 20));
+      const padding = 4;
+      const nameY = y + r + padding;
+      const hpY = nameY + fontSize + 2;
+
+      // 1. 이름
+      ctx.font = `bold ${fontSize}px sans-serif`;
+      ctx.fillStyle = "white";
+      ctx.strokeStyle = "rgba(0, 0, 0, 0.8)";
+      ctx.lineWidth = 3;
+      ctx.strokeText(entity.name, x, nameY);
+      ctx.fillText(entity.name, x, nameY);
+
+      // 2. HP (질량)
+      const massText = `♥ ${Math.floor(entity.mass)}`;
+      const smallFont = fontSize * 0.9;
+      ctx.font = `bold ${smallFont}px sans-serif`;
+
+      // 외곽선
+      ctx.strokeText(massText, x, hpY);
+
+      // 텍스트 (핑크색으로 포인트)
+      ctx.fillStyle = "#ff80ab";
+      ctx.fillText(massText, x, hpY);
     }
   }
 

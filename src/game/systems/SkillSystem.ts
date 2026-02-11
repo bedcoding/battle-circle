@@ -93,9 +93,10 @@ export const ALL_SKILLS: Skill[] = [
 ];
 
 // 레벨업에 필요한 mass 임계값
+// 레벨업에 필요한 mass 임계값
 export function getMassThreshold(level: number): number {
-  // 레벨 1: 30, 레벨 2: 60, 레벨 3: 100, 레벨 4: 160, ...
-  return Math.floor(30 * Math.pow(1.5, level - 1));
+  // 레벨 1: 60, 레벨 2: 90, ... (초기 질량 50일 때 바로 레벨업 안 되도록 상향)
+  return Math.floor(60 * Math.pow(1.5, level - 1));
 }
 
 export interface SkillChoice {

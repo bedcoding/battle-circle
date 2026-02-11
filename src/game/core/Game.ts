@@ -20,7 +20,7 @@ import { Vector2 } from "../utils/Vector2";
 import { BuffType } from "../entities/BuffItem";
 import { EquipType } from "../entities/EquipmentItem";
 
-const SHOOT_COOLDOWN = 0.3; // 초
+const SHOOT_COOLDOWN = 0.1; // 연사 속도 상향 (0.3 -> 0.1)
 
 export interface GameResult {
   rank: number;

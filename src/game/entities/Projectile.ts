@@ -9,8 +9,8 @@ export class Projectile {
   ownerId: string;
   color: string;
   radius: number = 4;
-  damage: number = 1;
-  speed: number = 600;
+  damage: number = 3; // 공격력 조정 (5 -> 3)
+  speed: number = 2000; // 투사체 속도 상향 (600 -> 900)
   lifetime: number = 2;
   isAlive: boolean = true;
 
