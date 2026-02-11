@@ -1,0 +1,244 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0a0a1a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: white;
+}
+
+#__next {
+  width: 100%;
+  height: 100%;
+}
+
+canvas {
+  display: block;
+  cursor: none;
+}
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 26, 0.95);
+  z-index: 10;
+}
+
+.menu-title {
+  font-size: 64px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 40px;
+  text-shadow: none;
+}
+
+.menu-subtitle {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 40px;
+}
+
+.menu-input {
+  padding: 12px 24px;
+  font-size: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  outline: none;
+  text-align: center;
+  margin-bottom: 20px;
+  width: 280px;
+  transition: border-color 0.2s;
+}
+
+.menu-input:focus {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.menu-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.play-button {
+  padding: 14px 48px;
+  font-size: 20px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #4d96ff, #6bcb77);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+}
+
+.play-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(77, 150, 255, 0.4);
+}
+
+.play-button:active {
+  transform: scale(0.98);
+}
+
+.result-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 26, 0.9);
+  z-index: 10;
+}
+
+.result-rank {
+  font-size: 80px;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.result-winner {
+  color: #ffd93d;
+}
+
+.result-loser {
+  color: #ff6b6b;
+}
+
+.result-title {
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.result-stats {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.result-stat {
+  text-align: center;
+}
+
+.result-stat-value {
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.result-stat-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 4px;
+}
+
+/* 레벨업 선택 UI */
+.levelup-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 26, 0.75);
+  z-index: 20;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.levelup-title {
+  font-size: 36px;
+  font-weight: 900;
+  color: #ffd93d;
+  margin-bottom: 8px;
+}
+
+.levelup-subtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 30px;
+}
+
+.levelup-choices {
+  display: flex;
+  gap: 20px;
+}
+
+.levelup-card {
+  width: 200px;
+  padding: 24px 16px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+  text-align: center;
+  font-family: inherit;
+}
+
+.levelup-card:hover {
+  transform: translateY(-6px);
+  border-color: #ffd93d;
+  background: rgba(255, 217, 61, 0.1);
+}
+
+.levelup-card:active {
+  transform: translateY(-2px);
+}
+
+.levelup-card-icon {
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  color: #ffd93d;
+}
+
+.levelup-card-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.levelup-card-level {
+  font-size: 13px;
+  font-weight: 400;
+  color: #6bcb77;
+}
+
+.levelup-card-desc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+}
+
+.spectating-banner {
+  position: fixed;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 24px;
+  background: rgba(255, 107, 107, 0.8);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 5;
+}

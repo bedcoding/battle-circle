@@ -1,0 +1,184 @@
+"use client";
+
+import { useRef, useEffect, useState, useCallback } from "react";
+import { Game, GameResult } from "@/game/core/Game";
+import { GameState } from "@/game/core/GameState";
+import { SkillChoice } from "@/game/systems/SkillSystem";
+
+export default function Home() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const gameRef = useRef<Game | null>(null);
+  const [screen, setScreen] = useState<"menu" | "playing" | "spectating" | "result">("menu");
+  const [playerName, setPlayerName] = useState("");
+  const [result, setResult] = useState<GameResult | null>(null);
+  const [levelUpChoices, setLevelUpChoices] = useState<SkillChoice[] | null>(null);
+  const [levelUpLevel, setLevelUpLevel] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      gameRef.current?.resize(canvas.width, canvas.height);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const startGame = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const name = playerName.trim() || "Player";
+
+    gameRef.current?.stop();
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const game = new Game(canvas);
+    gameRef.current = game;
+
+    game.onStateChange = (state: GameState, gameResult?: GameResult) => {
+      switch (state) {
+        case GameState.PLAYING:
+          setScreen("playing");
+          break;
+        case GameState.SPECTATING:
+          setScreen("spectating");
+          break;
+        case GameState.RESULT:
+          setScreen("result");
+          if (gameResult) setResult(gameResult);
+          break;
+      }
+    };
+
+    game.onLevelUp = (choices: SkillChoice[], level: number) => {
+      setLevelUpChoices(choices);
+      setLevelUpLevel(level);
+    };
+
+    game.start(name);
+    setScreen("playing");
+    setLevelUpChoices(null);
+  }, [playerName]);
+
+  const handleSkillSelect = useCallback((skillId: string) => {
+    gameRef.current?.selectSkill(skillId);
+    setLevelUpChoices(null);
+  }, []);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter") startGame();
+    },
+    [startGame]
+  );
+
+  useEffect(() => {
+    return () => {
+      gameRef.current?.stop();
+    };
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  };
+
+  return (
+    <div style={{ width: "100%", height: "100vh", position: "relative" }}>
+      <canvas ref={canvasRef} />
+
+      {/* 시작 화면 */}
+      {screen === "menu" && (
+        <div className="menu-overlay">
+          <h1 className="menu-title">Battle Circle</h1>
+          <p className="menu-subtitle">Eat. Grow. Survive the Storm.</p>
+          <input
+            className="menu-input"
+            type="text"
+            placeholder="Enter your name"
+            value={playerName}
+            onChange={(e) => setPlayerName(e.target.value)}
+            onKeyDown={handleKeyDown}
+            maxLength={16}
+            autoFocus
+          />
+          <button className="play-button" onClick={startGame}>
+            PLAY
+          </button>
+        </div>
+      )}
+
+      {/* 레벨업 선택 UI */}
+      {levelUpChoices && (
+        <div className="levelup-overlay">
+          <div className="levelup-title">LEVEL UP! (Lv.{levelUpLevel})</div>
+          <div className="levelup-subtitle">Choose a skill</div>
+          <div className="levelup-choices">
+            {levelUpChoices.map((choice) => (
+              <button
+                key={choice.skill.id}
+                className="levelup-card"
+                onClick={() => handleSkillSelect(choice.skill.id)}
+              >
+                <div className="levelup-card-icon">{choice.skill.icon}</div>
+                <div className="levelup-card-name">
+                  {choice.skill.name}
+                  {choice.currentLevel > 0 && (
+                    <span className="levelup-card-level">
+                      {" "}Lv.{choice.currentLevel} → {choice.nextLevel}
+                    </span>
+                  )}
+                </div>
+                <div className="levelup-card-desc">{choice.skill.description}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 관전 배너 */}
+      {screen === "spectating" && (
+        <div className="spectating-banner">
+          You were eliminated! Spectating...
+        </div>
+      )}
+
+      {/* 결과 화면 */}
+      {screen === "result" && result && (
+        <div className="result-overlay">
+          <div className={`result-rank ${result.isWinner ? "result-winner" : "result-loser"}`}>
+            #{result.rank}
+          </div>
+          <div className="result-title">
+            {result.isWinner ? "WINNER WINNER CHICKEN DINNER!" : `Eliminated`}
+          </div>
+          <div className="result-stats">
+            <div className="result-stat">
+              <div className="result-stat-value">{result.kills}</div>
+              <div className="result-stat-label">Kills</div>
+            </div>
+            <div className="result-stat">
+              <div className="result-stat-value">{result.maxMass}</div>
+              <div className="result-stat-label">Max Mass</div>
+            </div>
+            <div className="result-stat">
+              <div className="result-stat-value">{formatTime(result.survivalTime)}</div>
+              <div className="result-stat-label">Survival Time</div>
+            </div>
+          </div>
+          <button className="play-button" onClick={startGame}>
+            PLAY AGAIN
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
