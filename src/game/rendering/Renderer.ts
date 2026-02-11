@@ -758,13 +758,16 @@ export class Renderer {
     const alive = this.entityManager.getAliveCount();
 
     // 생존자 수 (좌상단)
+    const padding = 10;
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx.fillRect(10, 10, 160, 36);
-    ctx.fillStyle = "white";
-    ctx.font = "bold 16px sans-serif";
+    ctx.roundRect(padding, padding, 180, 40, 8); // 배경 조금 더 둥글고 넓게
+    ctx.fill();
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 18px 'Noto Sans KR', sans-serif"; // 폰트 및 크기 조정
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
-    ctx.fillText(`Alive: ${alive}`, 20, 28);
+    ctx.fillText(`남은 적: ${alive}명`, padding + 15, padding + 20); // Alive -> 남은 적
 
     // 경과 시간
     const mins = Math.floor(elapsedTime / 60);
@@ -776,27 +779,37 @@ export class Renderer {
     // 플레이어 정보 (좌하단)
     if (player) {
       const rank = this.scoreSystem.getPlayerRank(player.name);
+
+      const pPadding = 10;
+      const pY = this.canvas.height - 90;
+
       ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-      ctx.fillRect(10, this.canvas.height - 80, 200, 70);
+      ctx.roundRect(pPadding, pY, 180, 80, 8);
+      ctx.fill();
+
       ctx.fillStyle = "white";
-      ctx.font = "bold 14px sans-serif";
+      ctx.font = "bold 14px 'Noto Sans KR', sans-serif";
       ctx.textAlign = "left";
-      ctx.fillText(`Mass: ${Math.floor(player.mass)}`, 20, this.canvas.height - 58);
-      ctx.fillText(`Kills: ${player.kills}`, 20, this.canvas.height - 38);
-      ctx.fillText(`Rank: #${rank}`, 20, this.canvas.height - 18);
+      ctx.fillText(`점수: ${Math.floor(player.mass)}`, pPadding + 15, pY + 25);
+      ctx.fillText(`처치: ${player.kills}킬`, pPadding + 15, pY + 45);
+      ctx.fillText(`현재 순위: ${rank}위`, pPadding + 15, pY + 65);
     }
 
     // 리더보드 (우상단)
     const lb = this.scoreSystem.leaderboard.slice(0, 5);
     const lbWidth = 180;
     const lbX = this.canvas.width - lbWidth - 10;
+
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx.fillRect(lbX, 10, lbWidth, 20 + lb.length * 22);
+    ctx.roundRect(lbX, 10, lbWidth, 30 + lb.length * 24, 8);
+    ctx.fill();
+
     ctx.fillStyle = "white";
-    ctx.font = "bold 12px sans-serif";
+    ctx.font = "bold 14px 'Noto Sans KR', sans-serif";
     ctx.textAlign = "left";
-    ctx.fillText("Leaderboard", lbX + 10, 26);
-    ctx.font = "12px sans-serif";
+    ctx.fillText("순위표", lbX + 10, 30);
+
+    ctx.font = "12px 'Noto Sans KR', sans-serif";
     for (let i = 0; i < lb.length; i++) {
       const entry = lb[i];
       const isMe = player && entry.name === player.name;

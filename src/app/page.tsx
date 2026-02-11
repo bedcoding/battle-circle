@@ -11,22 +11,11 @@ export default function Home() {
   const [screen, setScreen] = useState<"menu" | "playing" | "spectating" | "result">("menu");
   const [playerName, setPlayerName] = useState("");
   const [result, setResult] = useState<GameResult | null>(null);
+  const [botCount, setBotCount] = useState(100);
   const [levelUpChoices, setLevelUpChoices] = useState<SkillChoice[] | null>(null);
   const [levelUpLevel, setLevelUpLevel] = useState(0);
 
-  useEffect(() => {
-    const handleResize = () => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      gameRef.current?.resize(canvas.width, canvas.height);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  // ... (다른 useEffect 등)
 
   const startGame = useCallback(() => {
     const canvas = canvasRef.current;
@@ -62,10 +51,10 @@ export default function Home() {
       setLevelUpLevel(level);
     };
 
-    game.start(name);
+    game.start(name, botCount); // 선택된 봇 수 전달
     setScreen("playing");
     setLevelUpChoices(null);
-  }, [playerName]);
+  }, [playerName, botCount]);
 
   const handleSkillSelect = useCallback((skillId: string) => {
     gameRef.current?.selectSkill(skillId);
@@ -110,6 +99,23 @@ export default function Home() {
             maxLength={16}
             autoFocus
           />
+
+          {/* 적 수 선택 드롭다운 추가 */}
+          <div style={{ marginBottom: "20px" }}>
+            <label style={{ color: "white", marginRight: "10px", fontWeight: "bold" }}>적 수:</label>
+            <select
+              value={botCount}
+              onChange={(e) => setBotCount(Number(e.target.value))}
+              style={{ padding: "8px", borderRadius: "8px", border: "none", fontSize: "16px", cursor: "pointer" }}
+            >
+              <option value={50}>50명 (쾌적)</option>
+              <option value={100}>100명 (기본)</option>
+              <option value={200}>200명 (혼잡)</option>
+              <option value={300}>300명 (난장판)</option>
+              <option value={500}>500명 (지옥)</option>
+            </select>
+          </div>
+
           <button className="play-button" onClick={startGame}>
             게임 시작
           </button>
@@ -181,8 +187,11 @@ export default function Home() {
               <div className="result-stat-label">생존 시간</div>
             </div>
           </div>
-          <button className="play-button" onClick={startGame}>
-            다시 하기
+          <button className="play-button" onClick={() => {
+            gameRef.current?.stop();
+            setScreen("menu");
+          }}>
+            처음으로
           </button>
         </div>
       )}
