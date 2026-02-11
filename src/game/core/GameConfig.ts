@@ -21,15 +21,15 @@ export const CONFIG = {
   },
   STORM: {
     PHASES: [
-      { waitTime: 30, shrinkTime: 20, targetRadius: 2000, damageRate: 0.02, centerDrift: 300 }, // 첫 자기장 크기도 확장
-      { waitTime: 25, shrinkTime: 15, targetRadius: 1200, damageRate: 0.04, centerDrift: 200 },
-      { waitTime: 20, shrinkTime: 12, targetRadius: 700, damageRate: 0.07, centerDrift: 150 },
-      { waitTime: 15, shrinkTime: 10, targetRadius: 250, damageRate: 0.12, centerDrift: 80 },
-      { waitTime: 10, shrinkTime: 8, targetRadius: 50, damageRate: 0.20, centerDrift: 30 },
+      { waitTime: 30, shrinkTime: 20, targetRadius: 2000, damageRate: 0.01, centerDrift: 300 }, // 자기장 데미지 완화 (0.02 -> 0.01)
+      { waitTime: 25, shrinkTime: 15, targetRadius: 1200, damageRate: 0.02, centerDrift: 200 },
+      { waitTime: 20, shrinkTime: 12, targetRadius: 700, damageRate: 0.035, centerDrift: 150 },
+      { waitTime: 15, shrinkTime: 10, targetRadius: 250, damageRate: 0.06, centerDrift: 80 },
+      { waitTime: 10, shrinkTime: 8, targetRadius: 50, damageRate: 0.10, centerDrift: 30 },
     ],
   },
   BOT: {
-    COUNT: 40, // 적 수 2배로 증가 (20 -> 40)
+    COUNT: 100, // 적 수 대폭 증가 (40 -> 100)
     VISION_RANGE_MULTIPLIER: 1.5,
     DECISION_INTERVAL_BASE: 250,
     JITTER_ANGLE: Math.PI / 12,
