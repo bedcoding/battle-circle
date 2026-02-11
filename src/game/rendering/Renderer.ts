@@ -11,6 +11,7 @@ import { Player } from "../entities/Player";
 import { Entity } from "../entities/Entity";
 import { GameState } from "../core/GameState";
 import { BuffType } from "../entities/BuffItem";
+import { Bot } from "../entities/Bot";
 import { EquipType, EquipRarity } from "../entities/EquipmentItem";
 import { SpriteManager, SpriteKey } from "./SpriteManager";
 
@@ -284,7 +285,7 @@ export class Renderer {
     const isPlayer = entity === this.entityManager.player;
 
     // 본체 (스프라이트 또는 원)
-    const isBot = entity.constructor.name === "Bot";
+    const isBot = entity instanceof Bot;
 
     if (isPlayer) {
       const player = entity as Player;
