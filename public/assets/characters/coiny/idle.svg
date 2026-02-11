@@ -1,0 +1,10 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Coin Body -->
+  <circle cx="32" cy="32" r="24" fill="#FFD700" stroke="black" stroke-width="3"/>
+  <!-- Legs -->
+  <line x1="24" y1="54" x2="20" y2="62" stroke="black" stroke-width="3" stroke-linecap="round"/>
+  <line x1="40" y1="54" x2="44" y2="62" stroke="black" stroke-width="3" stroke-linecap="round"/>
+  <!-- Eyes -->
+  <circle cx="24" cy="28" r="3" fill="black"/>
+  <circle cx="40" cy="28" r="3" fill="black"/>
+</svg>

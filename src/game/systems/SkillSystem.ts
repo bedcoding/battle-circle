@@ -32,8 +32,8 @@ export function defaultStats(): SkillStats {
 export const ALL_SKILLS: Skill[] = [
   {
     id: "speed_boost",
-    name: "Swift",
-    description: "Move 15% faster",
+    name: "신속 (Swift)",
+    description: "이동 속도가 15% 빨라집니다.",
     icon: ">>",
     maxLevel: 5,
     apply: (level, stats) => {
@@ -42,8 +42,8 @@ export const ALL_SKILLS: Skill[] = [
   },
   {
     id: "glutton",
-    name: "Glutton",
-    description: "Gain 20% more mass from food",
+    name: "폭식 (Glutton)",
+    description: "음식 섭취 시 20% 더 많이 성장합니다.",
     icon: "++",
     maxLevel: 5,
     apply: (level, stats) => {
@@ -52,8 +52,8 @@ export const ALL_SKILLS: Skill[] = [
   },
   {
     id: "storm_resist",
-    name: "Storm Shield",
-    description: "Reduce storm damage by 25%",
+    name: "자기장 보호막",
+    description: "자기장 피해를 25% 덜 받습니다.",
     icon: "[]",
     maxLevel: 3,
     apply: (level, stats) => {
@@ -62,8 +62,8 @@ export const ALL_SKILLS: Skill[] = [
   },
   {
     id: "thorns",
-    name: "Thorns",
-    description: "Damage nearby larger enemies on contact",
+    name: "가시 갑옷",
+    description: "접촉한 적에게 피해를 줍니다.",
     icon: "**",
     maxLevel: 3,
     apply: (level, stats) => {
@@ -72,8 +72,8 @@ export const ALL_SKILLS: Skill[] = [
   },
   {
     id: "absorb_range",
-    name: "Gravity",
-    description: "Absorb from further away",
+    name: "중력장",
+    description: "더 먼 거리의 아이템을 흡수합니다.",
     icon: "()",
     maxLevel: 3,
     apply: (level, stats) => {
@@ -82,8 +82,8 @@ export const ALL_SKILLS: Skill[] = [
   },
   {
     id: "regen",
-    name: "Regen",
-    description: "Slowly regenerate mass over time",
+    name: "재생 (Regen)",
+    description: "시간이 지나면 서서히 크기가 회복됩니다.",
     icon: "HP",
     maxLevel: 3,
     apply: (level, stats) => {

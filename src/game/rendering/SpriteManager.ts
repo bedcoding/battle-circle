@@ -3,7 +3,9 @@
 export type SpriteKey =
   | "buff_shield" | "buff_damage" | "buff_speed" | "buff_magnet"
   | "equip_armor" | "equip_scope" | "equip_boots" | "equip_ammo"
-  | "food" | "skull" | "crown" | "heart" | "projectile";
+  | "food" | "skull" | "crown" | "heart" | "projectile"
+  | "jaymee_idle" | "jaymee_up" | "jaymee_down" | "jaymee_left" | "jaymee_right"
+  | "coiny_idle";
 
 const SPRITE_PATHS: Record<SpriteKey, string> = {
   buff_shield: "/assets/icons/buff_shield.png",
@@ -19,6 +21,13 @@ const SPRITE_PATHS: Record<SpriteKey, string> = {
   crown: "/assets/icons/crown.png",
   heart: "/assets/icons/heart.png",
   projectile: "/assets/icons/projectile.png",
+  jaymee_idle: "/assets/characters/jaymee/idle.png",
+  // 귀찮아서 모든 방향을 idle 이미지로 통일함...
+  jaymee_up: "/assets/characters/jaymee/idle.png",
+  jaymee_down: "/assets/characters/jaymee/idle.png",
+  jaymee_left: "/assets/characters/jaymee/idle.png",
+  jaymee_right: "/assets/characters/jaymee/idle.png",
+  coiny_idle: "/assets/characters/coiny/idle.svg",
 };
 
 export class SpriteManager {

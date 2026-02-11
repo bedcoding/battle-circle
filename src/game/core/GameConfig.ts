@@ -7,8 +7,8 @@ export const CONFIG = {
     LARGE_FOOD_CHANCE: 0.05,
   },
   PLAYER: {
-    INITIAL_MASS: 10,
-    MIN_MASS: 5,
+    INITIAL_MASS: 20,
+    MIN_MASS: 10,
     BASE_SPEED: 300,
     SPEED_DECAY: 0.003,
     RADIUS_MULTIPLIER: 4.0,

@@ -149,7 +149,7 @@ export class StormSystem {
     if (!this.started) return "";
     if (this.phase >= CONFIG.STORM.PHASES.length) return "최종 안전지대";
     return this.state === StormState.WAITING
-      ? `${this.phase + 1}단계 | 축소까지 ${Math.ceil(this.timer)}초`
+      ? `${this.phase + 1}단계 | 자기장 축소: ${Math.ceil(this.timer)}초 남음`
       : `축소 중... ${Math.ceil(this.timer)}초`;
   }
 }

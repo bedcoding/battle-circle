@@ -283,10 +283,46 @@ export class Renderer {
     const r = entity.radius * cam.zoom;
     const isPlayer = entity === this.entityManager.player;
 
+    // 본체 (스프라이트 또는 원)
+    const isBot = entity.constructor.name === "Bot";
+
+    if (isPlayer) {
+      const player = entity as Player;
+      let sprite: SpriteKey = "jaymee_idle";
+
+      const dir = player.moveDirection;
+      if (dir.length() > 0.1) {
+        if (Math.abs(dir.x) > Math.abs(dir.y)) {
+          sprite = dir.x > 0 ? "jaymee_right" : "jaymee_left";
+        } else {
+          sprite = dir.y > 0 ? "jaymee_down" : "jaymee_up";
+        }
+      }
+
+      if (this.sprites.has(sprite)) {
+        // 스프라이트 크기 조절 (히트박스보다 약간 크게)
+        const size = r * 2.8;
+        this.sprites.draw(ctx, sprite, screen.x, screen.y, size);
+      } else {
+        this.drawCircleBody(ctx, screen.x, screen.y, r, entity, isPlayer);
+      }
+    } else if (isBot) {
+      if (this.sprites.has("coiny_idle")) {
+        const size = r * 2.4;
+        this.sprites.draw(ctx, "coiny_idle", screen.x, screen.y, size);
+      } else {
+        this.drawCircleBody(ctx, screen.x, screen.y, r, entity, isPlayer);
+      }
+    } else {
+      this.drawCircleBody(ctx, screen.x, screen.y, r, entity, isPlayer);
+    }
+  }
+
+  private drawCircleBody(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, entity: Entity, isPlayer: boolean): void {
     // 본체
     ctx.fillStyle = entity.color;
     ctx.beginPath();
-    ctx.arc(screen.x, screen.y, r, 0, Math.PI * 2);
+    ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.fill();
 
     // 테두리
@@ -300,7 +336,7 @@ export class Renderer {
       ctx.lineWidth = 3;
       ctx.setLineDash([6, 4]);
       ctx.beginPath();
-      ctx.arc(screen.x, screen.y, r + 5, 0, Math.PI * 2);
+      ctx.arc(x, y, r + 5, 0, Math.PI * 2);
       ctx.stroke();
       ctx.setLineDash([]);
     }
@@ -310,7 +346,7 @@ export class Renderer {
       ctx.strokeStyle = "rgba(0, 229, 255, 0.4)";
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(screen.x, screen.y, r + 3, 0, Math.PI * 2);
+      ctx.arc(x, y, r + 3, 0, Math.PI * 2);
       ctx.stroke();
     }
 
@@ -321,7 +357,7 @@ export class Renderer {
       ctx.strokeStyle = "rgba(255, 23, 68, 0.5)";
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(screen.x, screen.y, r + 2, 0, Math.PI * 2);
+      ctx.arc(x, y, r + 2, 0, Math.PI * 2);
       ctx.stroke();
       ctx.shadowColor = "transparent";
       ctx.shadowBlur = 0;
@@ -336,16 +372,16 @@ export class Renderer {
       if (entity.hasEquip(EquipType.ARMOR)) {
         if (this.sprites.has("equip_armor")) {
           ctx.globalAlpha = 0.7;
-          this.sprites.drawTinted(ctx, "equip_armor", screen.x - r - iconSize * 0.4, screen.y, iconSize, "#78909c");
+          this.sprites.drawTinted(ctx, "equip_armor", x - r - iconSize * 0.4, y, iconSize, "#78909c");
           ctx.globalAlpha = 1;
         } else {
           ctx.strokeStyle = "rgba(120, 144, 156, 0.6)";
           ctx.lineWidth = 4;
           ctx.beginPath();
-          ctx.arc(screen.x, screen.y, r + 7, -Math.PI * 0.3, Math.PI * 0.3);
+          ctx.arc(x, y, r + 7, -Math.PI * 0.3, Math.PI * 0.3);
           ctx.stroke();
           ctx.beginPath();
-          ctx.arc(screen.x, screen.y, r + 7, Math.PI * 0.7, Math.PI * 1.3);
+          ctx.arc(x, y, r + 7, Math.PI * 0.7, Math.PI * 1.3);
           ctx.stroke();
         }
       }
@@ -354,14 +390,14 @@ export class Renderer {
       if (entity.hasEquip(EquipType.BOOTS)) {
         if (this.sprites.has("equip_boots")) {
           ctx.globalAlpha = 0.6;
-          this.sprites.drawTinted(ctx, "equip_boots", screen.x, screen.y + r + iconSize * 0.5, iconSize, "#66bb6a");
+          this.sprites.drawTinted(ctx, "equip_boots", x, y + r + iconSize * 0.5, iconSize, "#66bb6a");
           ctx.globalAlpha = 1;
         } else {
           ctx.fillStyle = "rgba(102, 187, 106, 0.5)";
           ctx.beginPath();
-          ctx.moveTo(screen.x, screen.y + r + 10);
-          ctx.lineTo(screen.x - 5, screen.y + r + 4);
-          ctx.lineTo(screen.x + 5, screen.y + r + 4);
+          ctx.moveTo(x, y + r + 10);
+          ctx.lineTo(x - 5, y + r + 4);
+          ctx.lineTo(x + 5, y + r + 4);
           ctx.closePath();
           ctx.fill();
         }
@@ -371,17 +407,17 @@ export class Renderer {
       if (entity.hasEquip(EquipType.SCOPE)) {
         if (this.sprites.has("equip_scope")) {
           ctx.globalAlpha = 0.5;
-          this.sprites.drawTinted(ctx, "equip_scope", screen.x, screen.y - r - iconSize * 0.5, iconSize, "#26c6da");
+          this.sprites.drawTinted(ctx, "equip_scope", x, y - r - iconSize * 0.5, iconSize, "#26c6da");
           ctx.globalAlpha = 1;
         } else {
           ctx.strokeStyle = "rgba(38, 198, 218, 0.4)";
           ctx.lineWidth = 1;
           const crossSize = r * 0.4;
           ctx.beginPath();
-          ctx.moveTo(screen.x - crossSize, screen.y - r - 8);
-          ctx.lineTo(screen.x + crossSize, screen.y - r - 8);
-          ctx.moveTo(screen.x, screen.y - r - 8 - crossSize);
-          ctx.lineTo(screen.x, screen.y - r - 8 + crossSize);
+          ctx.moveTo(x - crossSize, y - r - 8);
+          ctx.lineTo(x + crossSize, y - r - 8);
+          ctx.moveTo(x, y - r - 8 - crossSize);
+          ctx.lineTo(x, y - r - 8 + crossSize);
           ctx.stroke();
         }
       }
@@ -391,13 +427,13 @@ export class Renderer {
         if (this.sprites.has("equip_ammo")) {
           const pulse = 0.4 + Math.sin(time * 5) * 0.3;
           ctx.globalAlpha = pulse;
-          this.sprites.drawTinted(ctx, "equip_ammo", screen.x + r * 0.7, screen.y - r * 0.7, iconSize, "#ef5350");
+          this.sprites.drawTinted(ctx, "equip_ammo", x + r * 0.7, y - r * 0.7, iconSize, "#ef5350");
           ctx.globalAlpha = 1;
         } else {
           const pulse = 0.5 + Math.sin(time * 5) * 0.5;
           ctx.fillStyle = `rgba(239, 83, 80, ${0.3 + pulse * 0.4})`;
           ctx.beginPath();
-          ctx.arc(screen.x + r * 0.7, screen.y - r * 0.7, 4, 0, Math.PI * 2);
+          ctx.arc(x + r * 0.7, y - r * 0.7, 4, 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -406,7 +442,7 @@ export class Renderer {
     // 1위 왕관
     const leaderboard = this.scoreSystem.leaderboard;
     if (leaderboard.length > 0 && leaderboard[0].name === entity.name && this.sprites.has("crown")) {
-      this.sprites.drawTinted(ctx, "crown", screen.x, screen.y - r - 12, Math.max(r * 0.5, 14), "#ffd700");
+      this.sprites.drawTinted(ctx, "crown", x, y - r - 12, Math.max(r * 0.5, 14), "#ffd700");
     }
 
     // 이름
@@ -418,15 +454,15 @@ export class Renderer {
       ctx.font = `bold ${fontSize}px sans-serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.strokeText(entity.name, screen.x, screen.y);
-      ctx.fillText(entity.name, screen.x, screen.y);
+      ctx.strokeText(entity.name, x, y);
+      ctx.fillText(entity.name, x, y);
 
       // 질량 표시
       const massText = Math.floor(entity.mass).toString();
       const smallFont = fontSize * 0.6;
       ctx.font = `${smallFont}px sans-serif`;
-      ctx.strokeText(massText, screen.x, screen.y + fontSize * 0.7);
-      ctx.fillText(massText, screen.x, screen.y + fontSize * 0.7);
+      ctx.strokeText(massText, x, y + fontSize * 0.7);
+      ctx.fillText(massText, x, y + fontSize * 0.7);
     }
   }
 
@@ -564,8 +600,8 @@ export class Renderer {
       // 진행바
       const barColor = ab.type === BuffType.SPEED ? "#00e5ff"
         : ab.type === BuffType.SHIELD ? "#7c4dff"
-        : ab.type === BuffType.DAMAGE ? "#ff1744"
-        : "#ffea00";
+          : ab.type === BuffType.DAMAGE ? "#ff1744"
+            : "#ffea00";
       ctx.fillStyle = barColor;
       ctx.fillRect(x, y + 12, 40 * pct, 4);
 
@@ -610,7 +646,7 @@ export class Renderer {
       // 레어리티 테두리 색상
       const rarityColor = item.rarity === EquipRarity.EPIC ? "#b43dff"
         : item.rarity === EquipRarity.RARE ? "#3c8cff"
-        : "rgba(255,255,255,0.5)";
+          : "rgba(255,255,255,0.5)";
 
       // 발광
       ctx.shadowColor = rarityColor;
@@ -669,7 +705,7 @@ export class Renderer {
       // 레어리티 색
       const rarityColor = eq.rarity === EquipRarity.EPIC ? "#b43dff"
         : eq.rarity === EquipRarity.RARE ? "#3c8cff"
-        : "#aaaaaa";
+          : "#aaaaaa";
 
       // 아이콘 + 이름
       const eSpriteKey = EQUIP_SPRITE_MAP[eq.type as EquipType];

@@ -98,12 +98,12 @@ export default function Home() {
       {/* 시작 화면 */}
       {screen === "menu" && (
         <div className="menu-overlay">
-          <h1 className="menu-title">Battle Circle</h1>
-          <p className="menu-subtitle">Eat. Grow. Survive the Storm.</p>
+          <h1 className="menu-title">레진그라운드</h1>
+          <p className="menu-subtitle">내가 뭘 만든거지...</p>
           <input
             className="menu-input"
             type="text"
-            placeholder="Enter your name"
+            placeholder="이름을 입력하세요"
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -111,16 +111,23 @@ export default function Home() {
             autoFocus
           />
           <button className="play-button" onClick={startGame}>
-            PLAY
+            게임 시작
           </button>
+
+          <div className="menu-instructions">
+            <h3>조작 방법</h3>
+            <p>이동: 상하좌우 방향키</p>
+            <p>사격: 마우스 왼쪽 클릭</p>
+            <p>근접: 작은 적에게 부딪히면 흡수됨</p>
+          </div>
         </div>
       )}
 
       {/* 레벨업 선택 UI */}
       {levelUpChoices && (
         <div className="levelup-overlay">
-          <div className="levelup-title">LEVEL UP! (Lv.{levelUpLevel})</div>
-          <div className="levelup-subtitle">Choose a skill</div>
+          <div className="levelup-title">레벨 업! (Lv.{levelUpLevel})</div>
+          <div className="levelup-subtitle">스킬을 선택하세요</div>
           <div className="levelup-choices">
             {levelUpChoices.map((choice) => (
               <button
@@ -147,7 +154,7 @@ export default function Home() {
       {/* 관전 배너 */}
       {screen === "spectating" && (
         <div className="spectating-banner">
-          You were eliminated! Spectating...
+          탈락했습니다! 관전 중...
         </div>
       )}
 
@@ -158,24 +165,24 @@ export default function Home() {
             #{result.rank}
           </div>
           <div className="result-title">
-            {result.isWinner ? "WINNER WINNER CHICKEN DINNER!" : `Eliminated`}
+            {result.isWinner ? "승리! 최고의 생존자!" : `탈락`}
           </div>
           <div className="result-stats">
             <div className="result-stat">
               <div className="result-stat-value">{result.kills}</div>
-              <div className="result-stat-label">Kills</div>
+              <div className="result-stat-label">처치</div>
             </div>
             <div className="result-stat">
               <div className="result-stat-value">{result.maxMass}</div>
-              <div className="result-stat-label">Max Mass</div>
+              <div className="result-stat-label">최대 크기</div>
             </div>
             <div className="result-stat">
               <div className="result-stat-value">{formatTime(result.survivalTime)}</div>
-              <div className="result-stat-label">Survival Time</div>
+              <div className="result-stat-label">생존 시간</div>
             </div>
           </div>
           <button className="play-button" onClick={startGame}>
-            PLAY AGAIN
+            다시 하기
           </button>
         </div>
       )}
